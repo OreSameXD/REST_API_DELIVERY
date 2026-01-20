@@ -1,0 +1,51 @@
+package com.example.REST_API_DELIVERY.service;
+
+import com.example.REST_API_DELIVERY.model.Role;
+import com.example.REST_API_DELIVERY.model.User;
+import com.example.REST_API_DELIVERY.repository.UserRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class UserService {
+    public UserService (UserRepository userRepository){
+        this.userRepository = userRepository;
+    }
+    private final UserRepository userRepository;
+    //Регаем
+    public User registration(String username, String password, Role role){
+        User existingUser = userRepository.findByUsername(username);
+        if (existingUser != null){
+            throw new RuntimeException("Пользователь уже есть");
+        }
+        User user = new User(username,password,role);
+        return userRepository.save(user);
+    }
+    //Айдишник
+    public User getUserById(Long id){
+        return userRepository.findById(id).orElseThrow(()-> new RuntimeException("пользователь не найден"));
+    }
+    //обновляем юзера
+    public User updateUser(Long id, String username,String password,Role role){
+        User user = userRepository.findById(id).orElseThrow(()-> new RuntimeException());
+        user.setUsername(username);
+        user.setPassword(password);
+        user.setRole(role);
+        return  userRepository.save(user);
+    }
+    //поиск по роли
+    public List<User> getUserByRole(Role role){
+        return userRepository.findByRole(role);
+    }
+    //Удаление
+    public User deleteUser(Long id){
+        User user = userRepository.findById(id).orElseThrow(()-> new RuntimeException());
+        user.setActive(false);
+        return userRepository.save(user);
+    }
+    public List<User> getAllUser(){
+        return userRepository.findAll();
+    }
+
+}
