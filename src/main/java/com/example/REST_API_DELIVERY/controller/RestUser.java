@@ -23,9 +23,9 @@ public class RestUser {
    }
     //получаем айди
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id,@RequestBody User user){
-       User gerUserById = userService.getUserById(id);
-       return ResponseEntity.ok(user);
+    public ResponseEntity<User> getUserById(@PathVariable Long id){
+       User getUserById = userService.getUserById(id);
+       return ResponseEntity.ok(getUserById);
     }
     //обновляем
     @PutMapping("/{id}")
