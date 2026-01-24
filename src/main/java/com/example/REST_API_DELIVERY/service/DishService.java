@@ -28,8 +28,7 @@ public class DishService {
     }
 
     public List<Dish> getDishesByRestoran(Long restoranId) {
-        Restoran restoran = restoranRepository.findById(restoranId)
-                .orElseThrow(() -> new RuntimeException("Ресторан не найден"));
+        Restoran restoran = restoranRepository.findById(restoranId).orElseThrow(() -> new RuntimeException("Ресторан не найден"));
         return dishRepository.findByRestoran(restoran);
     }
 
@@ -42,13 +41,13 @@ public class DishService {
     }
 
     public void deleteDish(Long id) {
-        Dish dish = dishRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Блюдо не найдено"));
+        Dish dish = dishRepository.findById(id).orElseThrow(() -> new RuntimeException("Блюдо не найдено"));
         dishRepository.delete(dish);
     }
-    //фильтр наличия
+    //Page
     public List<Dish> getAvailableDishes(Long restoranId) {
-        Restoran restoran = restoranRepository.findById(restoranId).orElseThrow(() -> new RuntimeException("Ресторан не найден"));
+        Restoran restoran = restoranRepository.findById(restoranId)
+                .orElseThrow(() -> new RuntimeException("Ресторан не найден"));
         List<Dish> allDishes = dishRepository.findByRestoran(restoran);
         List<Dish> available = new ArrayList<>();
         for (Dish d : allDishes) {

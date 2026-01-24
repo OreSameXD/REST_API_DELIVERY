@@ -9,11 +9,11 @@ import java.util.List;
 
 @Service
 public class UserService {
+    private final UserRepository userRepository;
     public UserService (UserRepository userRepository){
         this.userRepository = userRepository;
     }
-    private final UserRepository userRepository;
-    //Регаем
+
     public User registration(String username, String password, Role role){
         User existingUser = userRepository.findByUsername(username);
         if (existingUser != null){
@@ -22,11 +22,9 @@ public class UserService {
         User user = new User(username,password,role);
         return userRepository.save(user);
     }
-    //Айдишник
     public User getUserById(Long id){
         return userRepository.findById(id).orElseThrow(()-> new RuntimeException("пользователь не найден"));
     }
-    //обновляем юзера
     public User updateUser(Long id, String username,String password,Role role){
         User user = userRepository.findById(id).orElseThrow(()-> new RuntimeException());
         user.setUsername(username);
@@ -34,11 +32,9 @@ public class UserService {
         user.setRole(role);
         return  userRepository.save(user);
     }
-    //поиск по роли
     public List<User> getUserByRole(Role role){
         return userRepository.findByRole(role);
     }
-    //Удаление
     public User deleteUser(Long id){
         User user = userRepository.findById(id).orElseThrow(()-> new RuntimeException());
         user.setActive(false);

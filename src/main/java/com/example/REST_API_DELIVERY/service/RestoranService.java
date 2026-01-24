@@ -2,6 +2,8 @@ package com.example.REST_API_DELIVERY.service;
 
 import com.example.REST_API_DELIVERY.model.Restoran;
 import com.example.REST_API_DELIVERY.repository.RestoranRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -9,7 +11,7 @@ import java.util.List;
 
 @Service
 public class RestoranService {
-    private RestoranRepository restoranRepository;
+    private final RestoranRepository restoranRepository;
     public RestoranService (RestoranRepository restoranRepository){
         this.restoranRepository = restoranRepository;
     }
@@ -20,9 +22,7 @@ public class RestoranService {
     public Restoran getRestoranById(Long id){
         return restoranRepository.findById(id).orElseThrow(()-> new RuntimeException("А не найдено"));
     }
-    public List<Restoran> getAllRestoran(){
-        return restoranRepository.findAll();
-    }
+
     public Restoran updateRestoran(Long id,Restoran updatedRestoran){
         Restoran restoran = getRestoranById(id);
         restoran.setName(updatedRestoran.getName());
@@ -30,25 +30,23 @@ public class RestoranService {
         restoran.setOpen(updatedRestoran.isOpen());
         return restoranRepository.save(restoran);
     }
-    public List<Restoran> filterRestorans(String kitchen, Double minRating){
-        List<Restoran> allRestorans= restoranRepository.findAll();
-        List<Restoran> result = new ArrayList<>();
-        for (Restoran r :allRestorans) {
-            boolean matches = true;
-            if (kitchen != null && !kitchen.isEmpty()) {
-                if (!r.getKitchen().equalsIgnoreCase(kitchen)) {
-                    matches = false;
-                }
-            }
-            if (minRating != null) {
-                if (r.getRating() < minRating) {
-                    matches = false;
-                }
-            }
-            if (matches) {
-                result.add(r);
-            }
+
+    public Page<Restoran> getAllRestorans(Pageable pageable) {
+        return restoranRepository.findAll(pageable);
+    }
+    public Page<Restoran> filterRestorans(String kitchen, Double minRating ,Pageable pageable) {
+        if (kitchen != null && !kitchen.isEmpty() && minRating != null) {
+            return restoranRepository.findByKitchenIgnoreCaseAndRatingGreaterThanEqual(kitchen, minRating, pageable);
+
+        } else if (kitchen != null && !kitchen.isEmpty()) {
+            return restoranRepository.findByKitchen(kitchen, pageable);
+
+        } else if (minRating != null) {
+            return restoranRepository.findByRatingGreaterThanEqual(minRating, pageable);
+
+        } else {
+            return restoranRepository.findAll(pageable);
         }
-        return result;
+    }
 }
-}
+
