@@ -15,25 +15,25 @@ public class RestUser {
    public RestUser(UserService userService){
        this.userService = userService;
    }
-    //запрос на регистрацию
+
    @PostMapping
     public ResponseEntity<User> registration(@RequestBody User user){
        User savedUser = userService.registration(user.getUsername(), user.getPassword(),user.getRole());
        return ResponseEntity.ok(savedUser);
    }
-    //получаем айди
+
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id){
        User getUserById = userService.getUserById(id);
        return ResponseEntity.ok(getUserById);
     }
-    //обновляем
+
     @PutMapping("/{id}")
     public ResponseEntity<User> updatedUser(@PathVariable Long id,@RequestBody User user){
        User updatedUser = userService.updateUser(id, user.getUsername(), user.getPassword(), user.getRole());
        return ResponseEntity.ok(updatedUser);
     }
-    //поиск по роям
+
     @GetMapping
     public ResponseEntity<List<User>> getUsers(@RequestParam(required = false) Role role){
        if (role == null){

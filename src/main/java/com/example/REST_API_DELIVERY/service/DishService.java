@@ -46,13 +46,12 @@ public class DishService {
     }
 
     public List<Dish> getAvailableDishes(Long restoranId) {
-        Restoran restoran = restoranRepository.findById(restoranId)
-                .orElseThrow(() -> new RuntimeException("Ресторан не найден"));
+        Restoran restoran = restoranRepository.findById(restoranId).orElseThrow(() -> new ResourceNotFoundException("Ресторан не найден"));
         List<Dish> allDishes = dishRepository.findByRestoran(restoran);
         List<Dish> available = new ArrayList<>();
-        for (Dish d : allDishes) {
-            if (d.isAvailable()) {
-                available.add(d);
+        for (Dish disha : allDishes) {
+            if (disha.isAvailable()) {
+                available.add(disha);
             }
         }
         return available;

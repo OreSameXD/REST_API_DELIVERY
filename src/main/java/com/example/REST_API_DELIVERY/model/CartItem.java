@@ -2,7 +2,7 @@ package com.example.REST_API_DELIVERY.model;
 
 import jakarta.persistence.*;
 
-import java.util.List;
+
 
 @Entity
 @Table(name = "cart_items")
