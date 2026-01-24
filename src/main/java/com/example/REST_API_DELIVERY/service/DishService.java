@@ -1,5 +1,6 @@
 package com.example.REST_API_DELIVERY.service;
 
+import com.example.REST_API_DELIVERY.exception.ResourceNotFoundException;
 import com.example.REST_API_DELIVERY.model.Dish;
 import com.example.REST_API_DELIVERY.model.Restoran;
 import com.example.REST_API_DELIVERY.repository.DishRepository;
@@ -21,19 +22,18 @@ public class DishService {
     }
 
     public Dish createDish(Long restoranId, Dish dish) {
-        Restoran restoran = restoranRepository.findById(restoranId)
-                .orElseThrow(() -> new RuntimeException("Ресторан не найден"));
+        Restoran restoran = restoranRepository.findById(restoranId).orElseThrow(() -> new ResourceNotFoundException("Ресторан не найден"));
         dish.setRestoran(restoran);
         return dishRepository.save(dish);
     }
 
     public List<Dish> getDishesByRestoran(Long restoranId) {
-        Restoran restoran = restoranRepository.findById(restoranId).orElseThrow(() -> new RuntimeException("Ресторан не найден"));
+        Restoran restoran = restoranRepository.findById(restoranId).orElseThrow(() -> new ResourceNotFoundException("Ресторан не найден"));
         return dishRepository.findByRestoran(restoran);
     }
 
     public Dish updateDish(Long id, Dish updatedDish) {
-        Dish dish = dishRepository.findById(id).orElseThrow(() -> new RuntimeException("Блюдо не найдено"));
+        Dish dish = dishRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Блюдо не найдено"));
         dish.setName(updatedDish.getName());
         dish.setPrice(updatedDish.getPrice());
         dish.setAvailable(updatedDish.isAvailable());
@@ -41,10 +41,10 @@ public class DishService {
     }
 
     public void deleteDish(Long id) {
-        Dish dish = dishRepository.findById(id).orElseThrow(() -> new RuntimeException("Блюдо не найдено"));
+        Dish dish = dishRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Блюдо не найдено"));
         dishRepository.delete(dish);
     }
-    //Page
+
     public List<Dish> getAvailableDishes(Long restoranId) {
         Restoran restoran = restoranRepository.findById(restoranId)
                 .orElseThrow(() -> new RuntimeException("Ресторан не найден"));

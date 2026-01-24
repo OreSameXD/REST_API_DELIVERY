@@ -1,5 +1,6 @@
 package com.example.REST_API_DELIVERY.service;
 
+import com.example.REST_API_DELIVERY.exception.ResourceNotFoundException;
 import com.example.REST_API_DELIVERY.model.Restoran;
 import com.example.REST_API_DELIVERY.repository.RestoranRepository;
 import org.springframework.data.domain.Page;
@@ -17,10 +18,14 @@ public class RestoranService {
     }
 
     public Restoran createRestoran(Restoran restoran){
+        if (restoran.getName() == null || restoran.getName().isBlank()){
+            throw new IllegalArgumentException("должно быть заполненым");
+        }
+
         return restoranRepository.save(restoran);
     }
     public Restoran getRestoranById(Long id){
-        return restoranRepository.findById(id).orElseThrow(()-> new RuntimeException("А не найдено"));
+        return restoranRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("А не найдено с таким айди" + id));
     }
 
     public Restoran updateRestoran(Long id,Restoran updatedRestoran){

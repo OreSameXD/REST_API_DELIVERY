@@ -17,7 +17,7 @@ public class CartItem {
     @ManyToOne
     private Dish dish;
 
-    private int quantity = 1;
+    private int amount = 1;
 
 
     public Long getId() {
@@ -29,9 +29,7 @@ public class CartItem {
     public Dish getDish() {
         return dish;
     }
-    public int getQuantity() {
-        return quantity;
-    }
+
 
     public void setId(Long id) {
         this.id = id;
@@ -42,7 +40,13 @@ public class CartItem {
     public void setDish(Dish dish) {
         this.dish = dish;
     }
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
 }

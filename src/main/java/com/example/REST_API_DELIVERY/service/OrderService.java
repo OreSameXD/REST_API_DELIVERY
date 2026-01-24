@@ -1,5 +1,6 @@
 package com.example.REST_API_DELIVERY.service;
 
+import com.example.REST_API_DELIVERY.exception.ResourceNotFoundException;
 import com.example.REST_API_DELIVERY.model.Cart;
 import com.example.REST_API_DELIVERY.model.Order;
 import com.example.REST_API_DELIVERY.model.OrderStatus;
@@ -27,7 +28,7 @@ public class OrderService {
     public Order createOrder(Long userId) {
         Cart cart = cartService.getCart(userId);
         if (cart.getItems().isEmpty()) {
-            throw new RuntimeException("Корзина пустая");
+            throw new ResourceNotFoundException("Корзина пустая");
         }
         Order order = new Order();
         order.setUser(cart.getUser());
@@ -41,7 +42,7 @@ public class OrderService {
 
 
     public Order getOrder(Long id) {
-        return orderRepository.findById(id).orElseThrow(() -> new RuntimeException("Заказ не найден"));
+        return orderRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Заказ не найден"));
     }
 
 
