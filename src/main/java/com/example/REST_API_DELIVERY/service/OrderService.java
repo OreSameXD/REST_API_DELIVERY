@@ -1,15 +1,13 @@
 package com.example.REST_API_DELIVERY.service;
 
 import com.example.REST_API_DELIVERY.exception.ResourceNotFoundException;
-import com.example.REST_API_DELIVERY.model.Cart;
-import com.example.REST_API_DELIVERY.model.Order;
-import com.example.REST_API_DELIVERY.model.OrderStatus;
-import com.example.REST_API_DELIVERY.model.User;
+import com.example.REST_API_DELIVERY.model.*;
 import com.example.REST_API_DELIVERY.repository.OrderRepository;
 import com.example.REST_API_DELIVERY.repository.UserRepository;
 
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,9 +16,7 @@ public class OrderService {
     private final CartService cartService;
     private final UserRepository userRepository;
 
-    public OrderService(OrderRepository orderRepository,
-                        CartService cartService,
-                        UserRepository userRepository) {
+    public OrderService(OrderRepository orderRepository, CartService cartService, UserRepository userRepository) {
         this.orderRepository = orderRepository;
         this.cartService = cartService;
         this.userRepository = userRepository;
@@ -33,8 +29,17 @@ public class OrderService {
         Order order = new Order();
         order.setUser(cart.getUser());
         order.setRestoran(cart.getRestoran());
-        order.setItems(cart.getItems());
         order.setStatus(OrderStatus.New);
+
+        List<OrderItem> orderItems = new ArrayList<>();
+        for(CartItem cartItem : cart.getItems()){
+            OrderItem orderItem = new OrderItem();
+            orderItem.setOrder(order);
+            orderItem.setDish(cartItem.getDish());
+            orderItem.setAmount(cartItem.getAmount());
+            orderItems.add(orderItem);
+        }
+        order.setItems(orderItems);
         Order saved = orderRepository.save(order);
         cartService.clearCart(userId);
         return saved;

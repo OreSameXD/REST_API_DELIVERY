@@ -1,5 +1,6 @@
 package com.example.REST_API_DELIVERY.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 
@@ -12,9 +13,12 @@ public class CartItem {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "cart_id")
+    @JsonBackReference
     private Cart cart;
 
     @ManyToOne
+
     private Dish dish;
 
     private int amount = 1;

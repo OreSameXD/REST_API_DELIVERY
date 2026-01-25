@@ -14,8 +14,8 @@ public class CartController {
         this.cartService = cartService;
     }
     @PostMapping("/items")
-    public Cart addItem(@RequestParam Long userId, @RequestParam Long dishId, @RequestParam(defaultValue = "1") int quantity) {
-        return cartService.addItem(userId, dishId, quantity);
+    public Cart addItem(@RequestParam Long userId, @RequestParam Long dishId, @RequestParam(defaultValue = "1") int amount) {
+        return cartService.addItem(userId, dishId, amount);
     }
     @DeleteMapping("/items{id}")
     public String removeItem(@PathVariable Long id){
@@ -23,8 +23,8 @@ public class CartController {
         return "Удалили";
     }
     @PutMapping("/items/{id}")
-    public CartItem updateQuantity(@PathVariable Long id, @RequestParam int quantity) {
-        return cartService.updateQuantity(id, quantity);
+    public CartItem updateQuantity(@PathVariable Long id, @RequestParam int amount) {
+        return cartService.updateQuantity(id, amount);
     }
     @GetMapping
     public Cart getCart(@RequestParam Long userId){

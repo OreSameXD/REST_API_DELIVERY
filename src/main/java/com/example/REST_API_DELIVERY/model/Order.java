@@ -1,7 +1,9 @@
 package com.example.REST_API_DELIVERY.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -14,8 +16,9 @@ public class Order {
     private User user;
     @ManyToOne
     Restoran restoran;
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<CartItem> items;
+    @JsonManagedReference
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderItem> items = new ArrayList<>();
     @Enumerated(EnumType.STRING)
     private OrderStatus status = OrderStatus.New;
 
@@ -31,7 +34,7 @@ public class Order {
         return restoran;
     }
 
-    public List<CartItem> getItems() {
+    public List<OrderItem> getItems() {
         return items;
     }
 
@@ -51,7 +54,7 @@ public class Order {
         this.restoran = restoran;
     }
 
-    public void setItems(List<CartItem> items) {
+    public void setItems(List<OrderItem> items) {
         this.items = items;
     }
 
